@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Management System</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    input { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+    button { padding: 10px 16px; margin: 5px 4px 5px 0; cursor: pointer; }
+    #output { background: #111; color: #0f0; padding: 16px; margin-top: 16px;
+              min-height: 60px; border-radius: 4px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Student Management System</h2>
+
+  <label>Student ID:</label>
+  <input id="studentId" placeholder="e.g. S001" />
+
+  <label>Name:</label>
+  <input id="name" placeholder="e.g. Atharva" />
+
+  <label>Course:</label>
+  <input id="course" placeholder="e.g. Computer Engineering" />
+
+  <div>
+    <button onclick="createStudent()">Create</button>
+    <button onclick="getStudents()">Get All</button>
+    <button onclick="updateStudent()">Update</button>
+    <button onclick="deleteStudent()">Delete</button>
+  </div>
+
+  <h3>Output:</h3>
+  <div id="output">Results will appear here...</div>
+
+  <script>
+    // PASTE YOUR API GATEWAY URL HERE
+    const API_URL = YOUR_INVOKE_URL;
+
+    async function createStudent() {
+      const id = document.getElementById('studentId').value;
+      const name = document.getElementById('name').value;
+      const course = document.getElementById('course').value;
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name, course })
+      });
+      const data = await res.json();
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function getStudents() {
+      const res = await fetch(API_URL, { method: 'GET' });
+      const data = await res.json();
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function updateStudent() {
+      const id = document.getElementById('studentId').value;
+      const name = document.getElementById('name').value;
+      const course = document.getElementById('course').value;
+      const timestamp = prompt("Enter timestamp from GET result:");
+      if (!timestamp) return;
+      const res = await fetch(API_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name, course, timestamp })
+      });
+      const data = await res.json();
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function deleteStudent() {
+      const id = document.getElementById('studentId').value;
+      const timestamp = prompt("Enter timestamp from GET result:");
+      if (!timestamp) return;
+      const res = await fetch(API_URL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, timestamp })
+      });
+      const data = await res.json();
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
